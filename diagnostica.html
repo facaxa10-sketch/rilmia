@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Diagnostica RILMIA</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="assets/js/config.js" defer></script>
+  <script src="assets/js/api.js" defer></script>
+</head>
+<body>
+  <main class="legal-page">
+    <section class="legal-page__inner">
+      <p class="eyebrow">RILMIA</p>
+      <h1>Diagnostica</h1>
+      <p class="legal-page__intro">
+        Questa pagina verifica se il sito riesce a leggere i prodotti dal backend.
+      </p>
+      <div class="legal-section">
+        <h2>Risultato</h2>
+        <pre id="output" style="white-space:pre-wrap;overflow-wrap:anywhere">Test in corso…</pre>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    window.addEventListener("DOMContentLoaded", async () => {
+      const output = document.getElementById("output");
+      try {
+        const result = await window.RilmiaAPI.call("getProducts");
+        output.textContent = JSON.stringify(result, null, 2);
+      } catch (error) {
+        output.textContent = "ERRORE: " + error.message;
+      }
+    });
+  </script>
+</body>
+</html>

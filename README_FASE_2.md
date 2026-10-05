@@ -253,3 +253,22 @@ La fase 3 aggiungerà `/admin` con:
 - upload immagini;
 - mostra/nascondi;
 - invio avviso agli iscritti.
+
+
+## Correzione lettura prodotti
+
+Questa versione usa JSONP per le sole letture pubbliche:
+
+- `getHome`
+- `getProducts`
+- `getProduct`
+
+Per questo motivo i prodotti possono essere visualizzati anche aprendo il sito
+in locale.
+
+Le operazioni che modificano dati (`subscribe`, `unsubscribe`, analytics e
+futura area admin) continuano invece a usare il bridge sicuro e richiedono
+un'origine presente in `ALLOWED_ORIGINS`.
+
+È inclusa anche `diagnostica.html`: aprendola puoi vedere direttamente la
+risposta `getProducts` restituita dal backend.
