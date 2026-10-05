@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Diagnostica RILMIA</title>
-  <link rel="stylesheet" href="assets/css/style.css">
-  <script src="assets/js/config.js" defer></script>
-  <script src="assets/js/api.js" defer></script>
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js"></script>
+  <script src="api.js"></script>
 </head>
 <body>
   <main class="legal-page">
@@ -14,25 +14,53 @@
       <p class="eyebrow">RILMIA</p>
       <h1>Diagnostica</h1>
       <p class="legal-page__intro">
-        Questa pagina verifica se il sito riesce a leggere i prodotti dal backend.
+        Verifica del collegamento tra il sito e Google Apps Script.
       </p>
+
       <div class="legal-section">
-        <h2>Risultato</h2>
+        <h2>1. config.js</h2>
+        <pre id="config-test" style="white-space:pre-wrap">Controllo…</pre>
+      </div>
+
+      <div class="legal-section">
+        <h2>2. api.js</h2>
+        <pre id="api-test" style="white-space:pre-wrap">Controllo…</pre>
+      </div>
+
+      <div class="legal-section">
+        <h2>3. Prodotti dal database</h2>
         <pre id="output" style="white-space:pre-wrap;overflow-wrap:anywhere">Test in corso…</pre>
       </div>
     </section>
   </main>
 
   <script>
-    window.addEventListener("DOMContentLoaded", async () => {
+    (async () => {
+      const configTest = document.getElementById("config-test");
+      const apiTest = document.getElementById("api-test");
       const output = document.getElementById("output");
+
+      if (window.RILMIA_CONFIG) {
+        configTest.textContent = "OK — config.js caricato\\n" + window.RILMIA_CONFIG.API_URL;
+      } else {
+        configTest.textContent = "ERRORE — config.js non è stato caricato.";
+      }
+
+      if (window.RilmiaAPI && typeof window.RilmiaAPI.call === "function") {
+        apiTest.textContent = "OK — api.js caricato";
+      } else {
+        apiTest.textContent = "ERRORE — api.js non è stato caricato.";
+        output.textContent = "Test interrotto: manca api.js.";
+        return;
+      }
+
       try {
         const result = await window.RilmiaAPI.call("getProducts");
         output.textContent = JSON.stringify(result, null, 2);
       } catch (error) {
-        output.textContent = "ERRORE: " + error.message;
+        output.textContent = "ERRORE BACKEND: " + error.message;
       }
-    });
+    })();
   </script>
 </body>
 </html>

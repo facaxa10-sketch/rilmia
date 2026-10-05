@@ -272,3 +272,42 @@ un'origine presente in `ALLOWED_ORIGINS`.
 
 È inclusa anche `diagnostica.html`: aprendola puoi vedere direttamente la
 risposta `getProducts` restituita dal backend.
+
+
+# VERSIONE FLAT — IMPORTANTE
+
+Questa versione NON usa la cartella `assets`.
+
+Carica TUTTI i file direttamente nella radice del repository GitHub.
+
+La radice deve apparire così:
+
+index.html
+prodotto.html
+privacy.html
+unsubscribe.html
+404.html
+diagnostica.html
+style.css
+config.js
+api.js
+common.js
+analytics.js
+home.js
+product.js
+subscribe.js
+unsubscribe.js
+rilmia-symbol.png
+rilmia-wordmark.png
+rilmia-logo.png
+favicon.png
+
+NON creare cartelle e NON cambiare i nomi.
+
+Test:
+1. pubblica GitHub Pages;
+2. apri /diagnostica.html;
+3. devono comparire:
+   - OK — config.js caricato
+   - OK — api.js caricato
+   - JSON con Torino in rilievo.
