@@ -1,26 +1,27 @@
-# RILMIA — Bridge v1
+# RILMIA — SOLUZIONE FINALE
 
-Questa versione NON usa più JSONP per leggere Google Apps Script.
+Questa versione usa un bridge Apps Script robusto basato su:
+- HtmlService
+- iframe nascosto
+- window.top.postMessage
+- google.script.run
+- cattura della vera finestra interna googleusercontent
 
-Tutte le richieste, comprese:
-- getHome
-- getProducts
-- getProduct
-- subscribe
-- unsubscribe
-- futura area admin
+Non usa ContentService/JSONP per il sito.
 
-passano attraverso l'iframe Bridge di Apps Script e `google.script.run`.
+Backend:
+https://script.google.com/macros/s/AKfycbxsMFN6wtDQnZLeILydhGnTCQIdBZ5mix4perwW59-XrvgP5bIa4fxM4Z-cCzrNdbBt/exec
 
-Prima di testare verifica nelle Script Properties di Apps Script:
+Prima aggiorna Apps Script con:
+RILMIA_APPS_SCRIPT_SOLUZIONE_FINALE.zip
 
-SITE_URL
-https://facaxa10-sketch.github.io/rilmia
+Poi carica questi file GitHub.
 
-ALLOWED_ORIGINS
-https://facaxa10-sketch.github.io
+Test:
+https://facaxa10-sketch.github.io/rilmia/diagnostica.html?final=2
 
-Poi apri:
-https://facaxa10-sketch.github.io/rilmia/diagnostica.html?bridge=v1
+Risultato atteso:
+OK — bridge Apps Script inizializzato
 
-Se funziona deve comparire il JSON con "Torino in rilievo".
+e JSON con:
+Torino in rilievo

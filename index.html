@@ -1279,98 +1279,149 @@ window.RILMIA_CONFIG = Object.freeze({
   const cfg = window.RILMIA_CONFIG;
   if (!cfg) throw new Error("RILMIA_CONFIG non caricato.");
 
-  let bridgeFrame = null;
-  let bridgeReady = null;
+  const SITE_ORIGIN = window.location.origin;
+  const BRIDGE_URL = "https://script.google.com/macros/s/AKfycbxsMFN6wtDQnZLeILydhGnTCQIdBZ5mix4perwW59-XrvgP5bIa4fxM4Z-cCzrNdbBt/exec?bridge=1";
+
+  let outerFrame = null;
+  let bridgeSource = null;
+  let bridgeReadyPromise = null;
   const pending = new Map();
 
-  function createRequestId() {
+  function requestId() {
     if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
     return "req_" + Date.now() + "_" + Math.random().toString(36).slice(2);
   }
 
-  function ensureBridge() {
-    if (bridgeReady) return bridgeReady;
-
-    bridgeReady = new Promise((resolve, reject) => {
-      bridgeFrame = document.createElement("iframe");
-      bridgeFrame.src = cfg.BRIDGE_URL;
-      bridgeFrame.title = "RILMIA API Bridge";
-      bridgeFrame.setAttribute("aria-hidden", "true");
-      bridgeFrame.tabIndex = -1;
-      bridgeFrame.style.cssText =
-        "position:fixed;width:1px;height:1px;left:-9999px;top:-9999px;border:0;opacity:0;pointer-events:none;";
-
-      const timer = window.setTimeout(() => {
-        reject(new Error(
-          "Il bridge Apps Script non ha risposto. Controlla ALLOWED_ORIGINS e il deployment."
-        ));
-      }, cfg.API_TIMEOUT_MS);
-
-      bridgeFrame.addEventListener("load", () => {
-        window.clearTimeout(timer);
-        // Piccola attesa per permettere a HtmlService/google.script.run di inizializzarsi.
-        window.setTimeout(() => resolve(bridgeFrame), 250);
-      }, { once: true });
-
-      bridgeFrame.addEventListener("error", () => {
-        window.clearTimeout(timer);
-        reject(new Error("Impossibile caricare il bridge Apps Script."));
-      }, { once: true });
-
-      document.body.appendChild(bridgeFrame);
-    });
-
-    return bridgeReady;
+  function sourceBelongsToFrame(source, frameWindow) {
+    try {
+      let current = source;
+      for (let i = 0; i < 6 && current; i++) {
+        if (current === frameWindow) return true;
+        if (current === current.parent) break;
+        current = current.parent;
+      }
+    } catch (_) {
+      // WindowProxy cross-origin: il confronto/parent è comunque normalmente disponibile.
+    }
+    return false;
   }
 
   window.addEventListener("message", event => {
-    if (!bridgeFrame || event.source !== bridgeFrame.contentWindow) return;
-
     const data = event.data || {};
-    if (data.type !== "rilmia:response" || !data.requestId) return;
+    if (data.type !== "RILMIA_FROM_IFRAME") return;
 
-    const request = pending.get(data.requestId);
-    if (!request) return;
+    // Apps Script HTMLService esegue il JS dentro un frame googleusercontent.
+    // Non assumiamo che event.source === outerFrame.contentWindow:
+    // catturiamo la vera finestra interna quando invia bridgeReady.
+    if (data.action === "bridgeReady") {
+      if (!outerFrame) return;
 
-    pending.delete(data.requestId);
-    window.clearTimeout(request.timer);
+      const host = (() => {
+        try { return new URL(event.origin).hostname; }
+        catch (_) { return ""; }
+      })();
 
-    if (data.ok) {
-      request.resolve(data.result);
-    } else {
-      request.reject(
-        new Error((data.error && data.error.message) || "Errore del backend.")
-      );
+      const googleOrigin =
+        host === "script.google.com" ||
+        host.endsWith(".googleusercontent.com");
+
+      if (!googleOrigin) return;
+
+      if (!sourceBelongsToFrame(event.source, outerFrame.contentWindow)) {
+        return;
+      }
+
+      bridgeSource = event.source;
+      document.dispatchEvent(new CustomEvent("rilmia:bridge-ready"));
+      return;
+    }
+
+    if (data.action === "serverResponse" && data.idRequest) {
+      const req = pending.get(data.idRequest);
+      if (!req) return;
+
+      pending.delete(data.idRequest);
+      clearTimeout(req.timer);
+
+      if (data.data && data.data.error) {
+        req.reject(new Error(data.data.error));
+      } else {
+        req.resolve(data.data ? data.data.result : null);
+      }
     }
   });
 
-  async function call(action, payload = {}) {
-    const frame = await ensureBridge();
-    const requestId = createRequestId();
+  function ensureBridge() {
+    if (bridgeSource) return Promise.resolve();
 
-    return new Promise((resolve, reject) => {
-      const timer = window.setTimeout(() => {
-        pending.delete(requestId);
+    if (bridgeReadyPromise) return bridgeReadyPromise;
+
+    bridgeReadyPromise = new Promise((resolve, reject) => {
+      if (!document.body) {
+        reject(new Error("DOM non pronto."));
+        return;
+      }
+
+      outerFrame = document.createElement("iframe");
+      outerFrame.src = BRIDGE_URL;
+      outerFrame.title = "RILMIA backend bridge";
+      outerFrame.setAttribute("aria-hidden", "true");
+      outerFrame.tabIndex = -1;
+      outerFrame.style.cssText =
+        "position:fixed;width:1px;height:1px;left:-9999px;top:-9999px;border:0;opacity:0;pointer-events:none;";
+
+      const timeout = window.setTimeout(() => {
         reject(new Error(
-          "Il backend non ha risposto tramite bridge. Verifica ALLOWED_ORIGINS = https://facaxa10-sketch.github.io"
+          "Bridge Apps Script non inizializzato. Verifica Bridge.html e il deployment."
         ));
       }, cfg.API_TIMEOUT_MS);
 
-      pending.set(requestId, { resolve, reject, timer });
+      const onReady = () => {
+        clearTimeout(timeout);
+        document.removeEventListener("rilmia:bridge-ready", onReady);
+        resolve();
+      };
 
-      frame.contentWindow.postMessage(
+      document.addEventListener("rilmia:bridge-ready", onReady);
+      document.body.appendChild(outerFrame);
+    });
+
+    return bridgeReadyPromise;
+  }
+
+  async function call(action, payload = {}) {
+    await ensureBridge();
+
+    if (!bridgeSource) {
+      throw new Error("Bridge non disponibile.");
+    }
+
+    const id = requestId();
+
+    return new Promise((resolve, reject) => {
+      const timer = window.setTimeout(() => {
+        pending.delete(id);
+        reject(new Error("Timeout backend RILMIA."));
+      }, cfg.API_TIMEOUT_MS);
+
+      pending.set(id, { resolve, reject, timer });
+
+      bridgeSource.postMessage(
         {
-          type: "rilmia:request",
-          requestId,
-          action,
-          payload
+          type: "RILMIA_FROM_PARENT",
+          action: "serverRequest",
+          idRequest: id,
+          data: {
+            functionName: "rilmiaRpc",
+            arguments: JSON.stringify([action, payload])
+          }
         },
         "*"
       );
     });
   }
 
-  window.RilmiaAPI = Object.freeze({ call });
+  window.RilmiaAPI = Object.freeze({ call, ensureBridge });
 })();
 
 </script>
@@ -1670,7 +1721,7 @@ window.RILMIA_CONFIG = Object.freeze({
 })();
 
 </script>
-  <meta name="rilmia-build" content="bridge-v1">
+  <meta name="rilmia-build" content="final-bridge-v2">
 </head>
 <body>
   <div class="announcement">
