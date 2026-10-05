@@ -31,7 +31,7 @@
       empty.querySelector("strong").textContent =
         "Non riusciamo a caricare i prodotti.";
       empty.querySelector("span").textContent =
-        "Riprova tra qualche secondo.";
+        error.message || "Riprova tra qualche secondo.";
       console.error(error);
     }
   }
