@@ -1,0 +1,170 @@
+\
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="RILMIA crea quadri e oggetti 3D personalizzati per trasformare luoghi, persone e ricordi in forme da vivere.">
+  <meta name="theme-color" content="#f4f1ec">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+
+  <title>RILMIA — Oggetti che raccontano qualcosa</title>
+
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="assets/js/config.js" defer></script>
+  <script src="assets/js/api.js" defer></script>
+  <script src="assets/js/common.js" defer></script>
+  <script src="assets/js/analytics.js" defer></script>
+  <script src="assets/js/home.js" defer></script>
+</head>
+<body>
+  <div class="announcement">
+    Anteprima RILMIA · stiamo costruendo la prima collezione
+  </div>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand-link" href="index.html" aria-label="RILMIA, home"><span class="brand-lockup" aria-label="RILMIA">
+          <span class="brand-symbol" aria-hidden="true"></span>
+          <span class="brand-wordmark" aria-hidden="true"></span>
+        </span></a>
+
+      <nav class="desktop-nav" aria-label="Navigazione principale">
+        <a href="#prodotti">Prodotti</a>
+        <a href="#manifesto">Il progetto</a>
+        <a href="privacy.html">Privacy</a>
+      </nav>
+
+      <button class="menu-toggle" type="button" data-menu-toggle
+              aria-expanded="false" aria-label="Apri menu">
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <nav class="mobile-nav" data-mobile-nav hidden aria-label="Navigazione mobile">
+    <div class="mobile-nav__inner">
+      <a href="#prodotti">Prodotti</a>
+      <a href="#manifesto">Il progetto</a>
+      <a href="privacy.html">Privacy</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="hero__grid">
+        <div class="hero__copy">
+          <p class="eyebrow" data-home-hero-eyebrow>RILMIA</p>
+          <h1 data-home-hero-title>Oggetti che raccontano qualcosa.</h1>
+          <p data-home-hero-text>
+            Quadri e oggetti in rilievo, progettati per trasformare luoghi,
+            persone e ricordi in qualcosa da toccare.
+          </p>
+
+          <div class="hero__actions">
+            <a class="button button--dark" href="#prodotti">Scopri i progetti</a>
+            <a class="button button--soft" href="#manifesto">Come nasce RILMIA</a>
+          </div>
+        </div>
+
+        <div class="hero-art" aria-label="Identità visiva RILMIA">
+          <div class="hero-brand" aria-label="Logo RILMIA">
+            <span class="hero-brand__symbol brand-symbol" aria-hidden="true"></span>
+            <span class="hero-brand__wordmark brand-wordmark" aria-hidden="true"></span>
+          </div>
+          <div class="hero-art__relief" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </div>
+          <span class="hero-art__tag">Forma · materia · ricordo</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--surface" id="prodotti">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Prima collezione</p>
+          <h2 data-home-products-title>In lavorazione</h2>
+        </div>
+        <p data-home-products-text>
+          Stiamo preparando la prima collezione. Dicci quali pezzi vorresti
+          davvero vedere disponibili.
+        </p>
+      </div>
+
+      <div class="loading-grid" data-products-loading aria-label="Caricamento prodotti">
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+      </div>
+
+      <div class="product-grid" data-products-grid></div>
+
+      <div class="empty-state" data-products-empty hidden>
+        <strong>I primi pezzi stanno prendendo forma.</strong>
+        <span>Presto troverai qui i progetti RILMIA da valutare.</span>
+      </div>
+    </section>
+
+    <section class="section" id="manifesto">
+      <div class="about-grid">
+        <div class="about-grid__lead">
+          <p data-home-about-title>Design personale, senza produzione di massa</p>
+        </div>
+
+        <div class="about-grid__body">
+          <p data-home-about-text>
+            Ogni progetto nasce digitale e prende forma attraverso la stampa 3D,
+            con finiture e personalizzazioni pensate per la casa.
+          </p>
+
+          <div class="about-points">
+            <div class="about-point">
+              <span class="about-point__number">01</span>
+              <span>Oggetti pensati per raccontare una storia, non per riempire uno scaffale.</span>
+            </div>
+            <div class="about-point">
+              <span class="about-point__number">02</span>
+              <span>Produzione in piccoli numeri e possibilità di personalizzazione.</span>
+            </div>
+            <div class="about-point">
+              <span class="about-point__number">03</span>
+              <span>La tua risposta ci aiuta a scegliere cosa trasformare davvero in prodotto.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__grid">
+      <div>
+        <a class="brand-link" href="index.html"><span class="brand-lockup" aria-label="RILMIA">
+          <span class="brand-symbol" aria-hidden="true"></span>
+          <span class="brand-wordmark" aria-hidden="true"></span>
+        </span></a>
+        <p class="site-footer__text" data-home-footer-text>
+          RILMIA — oggetti e quadri 3D personalizzati.
+        </p>
+      </div>
+
+      <div class="footer-links">
+        <a href="#prodotti">Prodotti</a>
+        <a href="privacy.html">Privacy policy</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© <span data-current-year></span> RILMIA</span>
+      <span>Questa è un'anteprima pre-lancio. Nessun acquisto viene effettuato sul sito.</span>
+    </div>
+  </footer>
+
+  <noscript>
+    <div style="padding:20px;text-align:center">
+      Per visualizzare i prodotti RILMIA è necessario abilitare JavaScript.
+    </div>
+  </noscript>
+</body>
+</html>

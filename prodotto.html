@@ -1,0 +1,182 @@
+\
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Scopri questo progetto RILMIA e registrati per essere avvisato quando sarà disponibile.">
+  <meta name="theme-color" content="#f4f1ec">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+
+  <title>Prodotto — RILMIA</title>
+
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="assets/js/config.js" defer></script>
+  <script src="assets/js/api.js" defer></script>
+  <script src="assets/js/common.js" defer></script>
+  <script src="assets/js/analytics.js" defer></script>
+  <script src="assets/js/subscribe.js" defer></script>
+  <script src="assets/js/product.js" defer></script>
+</head>
+<body>
+  <div class="announcement">
+    Anteprima RILMIA · nessun pagamento richiesto
+  </div>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand-link" href="index.html" aria-label="RILMIA, home"><span class="brand-lockup" aria-label="RILMIA">
+          <span class="brand-symbol" aria-hidden="true"></span>
+          <span class="brand-wordmark" aria-hidden="true"></span>
+        </span></a>
+
+      <nav class="desktop-nav" aria-label="Navigazione principale">
+        <a href="index.html#prodotti">Prodotti</a>
+        <a href="index.html#manifesto">Il progetto</a>
+        <a href="privacy.html">Privacy</a>
+      </nav>
+
+      <button class="menu-toggle" type="button" data-menu-toggle
+              aria-expanded="false" aria-label="Apri menu">
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <nav class="mobile-nav" data-mobile-nav hidden aria-label="Navigazione mobile">
+    <div class="mobile-nav__inner">
+      <a href="index.html#prodotti">Prodotti</a>
+      <a href="index.html#manifesto">Il progetto</a>
+      <a href="privacy.html">Privacy</a>
+    </div>
+  </nav>
+
+  <main class="product-page">
+    <div class="site-shell" data-product-loading>
+      <div class="loading-grid">
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+      </div>
+    </div>
+
+    <div data-product-root hidden>
+      <section class="product-layout">
+        <div class="product-gallery">
+          <div class="product-gallery__main" data-product-hero-image></div>
+          <div class="product-gallery__thumbs" data-product-thumbs></div>
+        </div>
+
+        <div class="product-info">
+          <span class="product-info__status" data-product-status>In arrivo</span>
+          <p class="eyebrow">RILMIA · progetto</p>
+          <h1 data-product-name></h1>
+          <p class="product-info__subtitle" data-product-subtitle></p>
+
+          <p class="product-info__price">
+            <small>Prezzo indicativo</small>
+            <span data-product-price></span>
+          </p>
+
+          <button class="button button--dark product-info__cta"
+                  type="button" data-open-interest>
+            Lo comprerei, avvisami quando esce
+          </button>
+
+          <dl class="product-details">
+            <div class="product-detail-row">
+              <dt>Materiali</dt>
+              <dd data-product-materials></dd>
+            </div>
+            <div class="product-detail-row">
+              <dt>Dimensioni</dt>
+              <dd data-product-dimensions></dd>
+            </div>
+            <div class="product-detail-row">
+              <dt>Stato</dt>
+              <dd data-product-status></dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="product-story">
+        <h2>Il progetto</h2>
+        <p data-product-description></p>
+      </section>
+    </div>
+
+    <section class="result-card" data-product-not-found hidden>
+      <span class="result-mark" aria-hidden="true">?</span>
+      <h1>Questo progetto non è disponibile.</h1>
+      <p data-not-found-text>
+        Potrebbe essere stato nascosto oppure il link non è più valido.
+      </p>
+      <a class="button button--dark" href="index.html#prodotti">Vedi tutti i progetti</a>
+    </section>
+  </main>
+
+  <div class="modal" data-interest-modal hidden>
+    <div class="modal__backdrop" data-close-modal></div>
+
+    <section class="modal__panel" role="dialog" aria-modal="true"
+             aria-labelledby="interest-title">
+      <button class="modal__close" type="button" data-close-modal
+              aria-label="Chiudi">×</button>
+
+      <p class="eyebrow">Interesse, non preordine</p>
+      <h2 id="interest-title">Lo comprerei.</h2>
+      <p class="modal__lead">
+        Lasciaci la tua email per <strong data-modal-product></strong>.
+        Non stai acquistando nulla e non ti verrà richiesto alcun pagamento.
+      </p>
+
+      <form data-interest-form novalidate>
+        <div class="interest-form__fields">
+          <div class="form-field">
+            <label for="interest-email">Email *</label>
+            <input id="interest-email" name="email" type="email"
+                   autocomplete="email" required
+                   placeholder="nome@email.it">
+          </div>
+
+          <div class="form-field">
+            <label for="interest-price">
+              Quanto saresti disposto a pagare? <span style="font-weight:400;color:var(--muted)">(facoltativo)</span>
+            </label>
+            <input id="interest-price" name="priceInterest" type="number"
+                   inputmode="decimal" min="0" max="100000" step="0.50"
+                   placeholder="Es. 59,90">
+          </div>
+
+          <label class="checkbox">
+            <input name="privacyConsent" type="checkbox" required>
+            <span>
+              Acconsento al trattamento della mia email per ricevere
+              l'avviso relativo a questo prodotto. Ho letto la
+              <a href="privacy.html" target="_blank" rel="noopener">privacy policy</a>. *
+            </span>
+          </label>
+        </div>
+
+        <p class="form-status" data-form-status tabindex="-1"></p>
+
+        <div class="form-success" data-form-success hidden>
+          <strong>Interesse registrato.</strong>
+          <span>Quando questo pezzo sarà pronto, sarai tra i primi a saperlo.</span>
+        </div>
+
+        <button class="button button--dark" type="submit">
+          Avvisami quando esce
+        </button>
+      </form>
+    </section>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-bottom" style="margin-top:0">
+      <span>© <span data-current-year></span> RILMIA</span>
+      <a href="privacy.html">Privacy policy</a>
+    </div>
+  </footer>
+</body>
+</html>
